@@ -1,80 +1,167 @@
 {
   "users": [
     {
-      "id": 1,
       "username": "owner",
-      "email": "owner@robloxaccshop.com",
-      "password": "hashed_password",
+      "password": "owner123",
       "role": "owner",
-      "balance": 15780000,
-      "registeredAt": "2023-01-01T00:00:00.000Z",
-      "isActive": true
+      "created": "2023-01-01"
+    },
+    {
+      "username": "admin1",
+      "password": "admin123",
+      "role": "admin",
+      "created": "2023-02-15"
+    },
+    {
+      "username": "ctv1",
+      "password": "ctv123",
+      "role": "ctv",
+      "created": "2023-03-20"
+    },
+    {
+      "username": "investor1",
+      "password": "investor123",
+      "role": "investor",
+      "created": "2023-04-10"
     }
   ],
-  "products": [
+  "accounts": [
     {
       "id": 1,
-      "name": "Roblox Premium VIP",
-      "description": "Tài khoản Roblox Premium với nhiều item độc quyền",
-      "price": 250000,
-      "originalPrice": 300000,
-      "image": "https://via.placeholder.com/300x200/6c5ce7/ffffff?text=Roblox+VIP",
-      "category": "vip",
-      "stock": 5,
-      "status": "active",
-      "features": [
-        "Hơn 1000 Robux",
-        "10+ Limited Items",
-        "Avatar độc quyền",
-        "Full gamepasses"
-      ],
-      "createdAt": "2023-01-01T00:00:00.000Z"
+      "title": "Liên Quân Mobile - Rank Cao Thủ",
+      "game": "lienquan",
+      "price": 450000,
+      "rank": "diamond",
+      "level": 30,
+      "skins": 25,
+      "description": "Tài khoản Liên Quân rank Cao Thủ, có 25 skin hiếm, level 30. Đầy đủ thông tin bảo mật.",
+      "image": "https://via.placeholder.com/300x180?text=Liên+Quân+Account",
+      "status": "available",
+      "credentials": "encrypted_data_here",
+      "added_by": "owner",
+      "added_date": "2023-09-15"
+    },
+    {
+      "id": 2,
+      "title": "Genshin Impact - AR55",
+      "game": "genshin",
+      "price": 850000,
+      "rank": "platinum",
+      "level": 55,
+      "characters": 25,
+      "description": "Tài khoản Genshin Impact AR55, có 25 nhân vật, nhiều weapon 5*. Tài khoản chất lượng cao.",
+      "image": "https://via.placeholder.com/300x180?text=Genshin+Impact+Account",
+      "status": "available",
+      "credentials": "encrypted_data_here",
+      "added_by": "admin1",
+      "added_date": "2023-09-20"
+    },
+    {
+      "id": 3,
+      "title": "PUBG Mobile - Conqueror",
+      "game": "pubg",
+      "price": 1200000,
+      "rank": "diamond",
+      "level": 70,
+      "skins": 40,
+      "description": "Tài khoản PUBG Mobile rank Conqueror, có 40 skin hiếm, level 70. Tài khoản cực hiếm.",
+      "image": "https://via.placeholder.com/300x180?text=PUBG+Account",
+      "status": "available",
+      "credentials": "encrypted_data_here",
+      "added_by": "ctv1",
+      "added_date": "2023-10-05"
+    },
+    {
+      "id": 4,
+      "title": "Free Fire - Heroic",
+      "game": "freefire",
+      "price": 350000,
+      "rank": "gold",
+      "level": 50,
+      "characters": 15,
+      "description": "Tài khoản Free Fire rank Heroic, có 15 nhân vật, nhiều skin đẹp. Giá tốt.",
+      "image": "https://via.placeholder.com/300x180?text=Free+Fire+Account",
+      "status": "sold",
+      "credentials": "encrypted_data_here",
+      "added_by": "admin1",
+      "added_date": "2023-10-08"
     }
   ],
   "transactions": [
     {
-      "id": "T123456789",
-      "type": "topup",
-      "provider": "viettel",
-      "value": 100000,
-      "serial": "123456789012",
-      "pin": "123456789012345",
-      "status": "success",
-      "amount": 100000,
-      "userId": 1,
-      "createdAt": "2023-01-01T10:00:00.000Z"
+      "id": 1001,
+      "user": "user123",
+      "account_id": 1,
+      "amount": 450000,
+      "status": "completed",
+      "date": "2023-10-10 14:30:00",
+      "payment_method": "card"
+    },
+    {
+      "id": 1002,
+      "user": "gamefan99",
+      "account_id": 2,
+      "amount": 850000,
+      "status": "completed",
+      "date": "2023-10-10 12:15:00",
+      "payment_method": "bank_transfer"
+    },
+    {
+      "id": 1003,
+      "user": "proplayer",
+      "account_id": 3,
+      "amount": 1200000,
+      "status": "pending",
+      "date": "2023-10-09 20:45:00",
+      "payment_method": "card"
     }
   ],
-  "promoCodes": [
+  "promo_codes": [
     {
       "code": "WELCOME10",
-      "type": "percentage",
-      "value": 10,
-      "maxUsage": 100,
-      "usedCount": 5,
-      "expiryDate": "2024-01-01T00:00:00.000Z",
-      "isActive": true,
-      "createdAt": "2023-01-01T00:00:00.000Z"
+      "discount_type": "percent",
+      "discount_value": 10,
+      "used_count": 15,
+      "usage_limit": 50,
+      "expiry_date": "2023-12-31",
+      "created_by": "owner",
+      "status": "active"
+    },
+    {
+      "code": "SUMMER2023",
+      "discount_type": "fixed",
+      "discount_value": 50000,
+      "used_count": 23,
+      "usage_limit": 100,
+      "expiry_date": "2023-11-30",
+      "created_by": "admin1",
+      "status": "active"
     }
   ],
-  "withdrawHistory": [
+  "withdrawals": [
     {
-      "id": "WD123456789",
+      "id": 2001,
+      "user": "owner",
       "amount": 5000000,
-      "method": "bank",
-      "accountInfo": "1234567890",
-      "accountName": "NGUYEN VAN A",
       "status": "completed",
-      "createdAt": "2023-01-01T15:00:00.000Z",
-      "completedAt": "2023-01-01T16:00:00.000Z"
+      "date": "2023-09-30",
+      "bank_account": "Techcombank - 1903 2053 8012 015"
+    },
+    {
+      "id": 2002,
+      "user": "owner",
+      "amount": 3000000,
+      "status": "pending",
+      "date": "2023-10-09",
+      "bank_account": "Vietcombank - 0021 0008 1234"
     }
   ],
-  "securityLogs": [
-    {
-      "timestamp": "2023-01-01T12:00:00.000Z",
-      "message": "User owner logged in successfully",
-      "userAgent": "Mozilla/5.0...",
-      "ip": "192.168.1.1"
-    }
-  ]
+  "settings": {
+    "site_name": "GameAcc Shop",
+    "currency": "VND",
+    "withdraw_security_code": "secure123",
+    "min_withdraw_amount": 50000,
+    "contact_email": "support@gameaccshop.com",
+    "contact_phone": "0900 123 456"
+  }
 }
