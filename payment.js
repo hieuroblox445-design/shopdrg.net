@@ -1,227 +1,306 @@
-// Payment System
-class PaymentSystem {
+// Payment processing functions for GameAcc Shop
+
+class PaymentProcessor {
     constructor() {
-        this.transactions = this.loadTransactions();
-        this.init();
+        this.apiBase = 'https://api.example.com'; // Replace with actual API endpoint
+        this.currentMethod = 'vina'; // Default payment method
+        this.currentDenomination = 10000; // Default denomination
     }
 
+    // Initialize payment processor
     init() {
         this.setupEventListeners();
+        this.loadPaymentMethods();
     }
 
-    loadTransactions() {
-        const saved = localStorage.getItem('shop_transactions');
-        return saved ? JSON.parse(saved) : [];
-    }
-
-    saveTransactions(transactions) {
-        localStorage.setItem('shop_transactions', JSON.stringify(transactions));
-    }
-
+    // Set up event listeners for payment UI
     setupEventListeners() {
-        // Payment form
-        const paymentForm = document.getElementById('paymentForm');
-        if (paymentForm) {
-            paymentForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                this.handleCardPayment();
+        // Payment method selection
+        document.querySelectorAll('.payment-method').forEach(method => {
+            method.addEventListener('click', (e) => {
+                this.selectPaymentMethod(e.target.getAttribute('data-method'));
+            });
+        });
+
+        // Denomination selection
+        document.querySelectorAll('.denomination').forEach(denom => {
+            denom.addEventListener('click', (e) => {
+                this.selectDenomination(parseInt(e.target.getAttribute('data-value')));
+            });
+        });
+
+        // Payment form submission
+        const submitBtn = document.getElementById('submitPayment');
+        if (submitBtn) {
+            submitBtn.addEventListener('click', () => {
+                this.processPayment();
             });
         }
+    }
 
-        // Buy now buttons
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('btn-buy') || e.target.closest('.btn-buy')) {
-                const productId = e.target.getAttribute('data-id') || e.target.closest('.btn-buy').getAttribute('data-id');
-                this.handleProductPurchase(productId);
-            }
+    // Load available payment methods
+    loadPaymentMethods() {
+        // In a real implementation, this would fetch from an API
+        const methods = [
+            { id: 'vina', name: 'Viettel', logo: 'viettel-logo.png' },
+            { id: 'mobi', name: 'Mobifone', logo: 'mobifone-logo.png' },
+            { id: 'vina', name: 'Vinaphone', logo: 'vinaphone-logo.png' }
+        ];
+
+        // Update UI with payment methods
+        this.updatePaymentMethodsUI(methods);
+    }
+
+    // Update payment methods in UI
+    updatePaymentMethodsUI(methods) {
+        const container = document.querySelector('.payment-methods');
+        if (!container) return;
+
+        container.innerHTML = '';
+        methods.forEach(method => {
+            const methodElement = document.createElement('div');
+            methodElement.className = `payment-method ${method.id === this.currentMethod ? 'active' : ''}`;
+            methodElement.setAttribute('data-method', method.id);
+            methodElement.textContent = method.name;
+            methodElement.addEventListener('click', () => {
+                this.selectPaymentMethod(method.id);
+            });
+            container.appendChild(methodElement);
         });
     }
 
-    handleCardPayment() {
-        const provider = document.getElementById('cardProvider').value;
-        const value = parseInt(document.getElementById('cardValue').value);
-        const serial = document.getElementById('cardSerial').value;
-        const pin = document.getElementById('cardPin').value;
-        const promoCode = document.getElementById('promoCode').value;
-
-        // Validate card
-        if (!this.validateCard(serial, pin)) {
-            window.authSystem.showMessage('Thông tin thẻ không hợp lệ!', 'error');
-            return;
-        }
-
-        // Process payment
-        const transaction = {
-            id: 'T' + Date.now(),
-            type: 'topup',
-            provider: provider,
-            value: value,
-            serial: serial,
-            pin: pin,
-            promoCode: promoCode,
-            status: 'success',
-            amount: this.calculateAmount(value, promoCode),
-            userId: window.authSystem.currentUser ? window.authSystem.currentUser.id : null,
-            createdAt: new Date().toISOString()
-        };
-
-        this.transactions.push(transaction);
-        this.saveTransactions(this.transactions);
-
-        // Update user balance
-        if (window.authSystem.currentUser) {
-            this.updateUserBalance(transaction.amount);
-        }
-
-        window.authSystem.showMessage(`Nạp thẻ thành công! Số dư: ${this.formatCurrency(transaction.amount)}`, 'success');
+    // Select payment method
+    selectPaymentMethod(method) {
+        this.currentMethod = method;
         
-        // Close modal and reset form
-        const paymentModal = document.getElementById('paymentModal');
-        if (paymentModal) paymentModal.classList.remove('active');
+        // Update UI
+        document.querySelectorAll('.payment-method').forEach(m => {
+            m.classList.remove('active');
+        });
+        document.querySelector(`.payment-method[data-method="${method}"]`).classList.add('active');
         
-        const paymentForm = document.getElementById('paymentForm');
-        if (paymentForm) paymentForm.reset();
+        console.log(`Selected payment method: ${method}`);
     }
 
-    handleProductPurchase(productId) {
-        if (!window.authSystem.currentUser) {
-            window.authSystem.showMessage('Vui lòng đăng nhập để mua hàng!', 'error');
-            return;
-        }
-
-        // Find product
-        const products = JSON.parse(localStorage.getItem('shop_products') || '[]');
-        const product = products.find(p => p.id === parseInt(productId));
-
-        if (!product) {
-            window.authSystem.showMessage('Sản phẩm không tồn tại!', 'error');
-            return;
-        }
-
-        if (product.stock <= 0) {
-            window.authSystem.showMessage('Sản phẩm đã hết hàng!', 'error');
-            return;
-        }
-
-        // Check balance
-        if (window.authSystem.currentUser.balance < product.price) {
-            window.authSystem.showMessage('Số dư không đủ! Vui lòng nạp thêm tiền.', 'error');
-            this.showPaymentModal();
-            return;
-        }
-
-        // Process purchase
-        const transaction = {
-            id: 'T' + Date.now(),
-            type: 'product',
-            productId: product.id,
-            productName: product.name,
-            amount: product.price,
-            status: 'success',
-            userId: window.authSystem.currentUser.id,
-            createdAt: new Date().toISOString()
-        };
-
-        this.transactions.push(transaction);
-        this.saveTransactions(this.transactions);
-
-        // Update user balance
-        this.updateUserBalance(-product.price);
-
-        // Update product stock
-        product.stock -= 1;
-        localStorage.setItem('shop_products', JSON.stringify(products));
-
-        window.authSystem.showMessage(`Mua thành công ${product.name}!`, 'success');
+    // Select denomination
+    selectDenomination(amount) {
+        this.currentDenomination = amount;
         
-        // Show account details (in real implementation, this would be secure)
-        this.showAccountDetails(product);
+        // Update UI
+        document.querySelectorAll('.denomination').forEach(d => {
+            d.classList.remove('active');
+        });
+        document.querySelector(`.denomination[data-value="${amount}"]`).classList.add('active');
+        
+        console.log(`Selected denomination: ${amount}`);
     }
 
-    validateCard(serial, pin) {
-        // Basic validation
-        if (serial.length < 5 || pin.length < 5) {
+    // Process payment
+    async processPayment() {
+        const serial = document.getElementById('serial')?.value;
+        const code = document.getElementById('code')?.value;
+        const promoCode = document.getElementById('promo')?.value;
+
+        // Validate inputs
+        if (!serial || !code) {
+            this.showMessage('Vui lòng nhập đầy đủ thông tin thẻ!', 'error');
+            return;
+        }
+
+        // Show loading state
+        this.setLoadingState(true);
+
+        try {
+            // Prepare payment data
+            const paymentData = {
+                method: this.currentMethod,
+                denomination: this.currentDenomination,
+                serial: serial,
+                code: code,
+                promo_code: promoCode || null,
+                timestamp: new Date().toISOString()
+            };
+
+            // In a real implementation, this would send to a secure server
+            // For demo purposes, we'll simulate API call
+            const result = await this.simulatePaymentAPI(paymentData);
+
+            if (result.success) {
+                this.showMessage('Nạp thẻ thành công! Số tiền đã được cộng vào tài khoản.', 'success');
+                this.resetForm();
+            } else {
+                this.showMessage(`Nạp thẻ thất bại: ${result.message}`, 'error');
+            }
+        } catch (error) {
+            console.error('Payment processing error:', error);
+            this.showMessage('Có lỗi xảy ra khi xử lý thanh toán. Vui lòng thử lại.', 'error');
+        } finally {
+            this.setLoadingState(false);
+        }
+    }
+
+    // Simulate payment API call (replace with actual API integration)
+    simulatePaymentAPI(paymentData) {
+        return new Promise((resolve) => {
+            // Simulate API delay
+            setTimeout(() => {
+                // Simulate different outcomes based on card data
+                const lastDigit = parseInt(paymentData.code.slice(-1));
+                
+                if (lastDigit % 3 === 0) {
+                    resolve({
+                        success: true,
+                        message: 'Thẻ hợp lệ',
+                        transaction_id: 'TX' + Date.now(),
+                        amount: paymentData.denomination
+                    });
+                } else if (lastDigit % 3 === 1) {
+                    resolve({
+                        success: false,
+                        message: 'Thẻ đã được sử dụng'
+                    });
+                } else {
+                    resolve({
+                        success: false,
+                        message: 'Thẻ không hợp lệ'
+                    });
+                }
+            }, 2000);
+        });
+    }
+
+    // Show message to user
+    showMessage(message, type) {
+        // Create message element if it doesn't exist
+        let messageEl = document.getElementById('paymentMessage');
+        if (!messageEl) {
+            messageEl = document.createElement('div');
+            messageEl.id = 'paymentMessage';
+            messageEl.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                border-radius: 5px;
+                color: white;
+                z-index: 10000;
+                max-width: 300px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            `;
+            document.body.appendChild(messageEl);
+        }
+
+        // Set message content and style
+        messageEl.textContent = message;
+        messageEl.style.backgroundColor = type === 'success' ? '#28a745' : '#dc3545';
+        
+        // Show message
+        messageEl.style.display = 'block';
+        
+        // Auto hide after 5 seconds
+        setTimeout(() => {
+            messageEl.style.display = 'none';
+        }, 5000);
+    }
+
+    // Set loading state for payment button
+    setLoadingState(loading) {
+        const submitBtn = document.getElementById('submitPayment');
+        if (!submitBtn) return;
+
+        if (loading) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Đang xử lý...';
+            submitBtn.style.opacity = '0.7';
+        } else {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Nạp thẻ ngay';
+            submitBtn.style.opacity = '1';
+        }
+    }
+
+    // Reset payment form
+    resetForm() {
+        document.getElementById('serial').value = '';
+        document.getElementById('code').value = '';
+        document.getElementById('promo').value = '';
+    }
+
+    // Validate card information
+    validateCard(serial, code, method) {
+        // Basic validation rules
+        const rules = {
+            vina: { serialLength: 14, codeLength: 15 },
+            mobi: { serialLength: 15, codeLength: 12 },
+            vina: { serialLength: 14, codeLength: 14 }
+        };
+
+        const rule = rules[method];
+        if (!rule) return false;
+
+        if (serial.length !== rule.serialLength || code.length !== rule.codeLength) {
             return false;
         }
 
-        // In real implementation, this would validate with payment gateway
+        // Check if contains only digits
+        if (!/^\d+$/.test(serial) || !/^\d+$/.test(code)) {
+            return false;
+        }
+
         return true;
     }
 
-    calculateAmount(value, promoCode) {
-        let amount = value;
-
-        // Apply promo code if valid
-        if (promoCode) {
-            const promoCodes = JSON.parse(localStorage.getItem('shop_promocodes') || '[]');
-            const promo = promoCodes.find(p => 
-                p.code === promoCode.toUpperCase() && 
-                p.isActive && 
-                (!p.expiryDate || new Date(p.expiryDate) > new Date()) &&
-                (p.usedCount < p.maxUsage)
-            );
-
-            if (promo) {
-                if (promo.type === 'percentage') {
-                    amount = value * (1 + promo.value / 100);
+    // Apply promo code
+    async applyPromoCode(code) {
+        try {
+            // In real implementation, this would check against database
+            const promo = await this.checkPromoCode(code);
+            
+            if (promo.valid) {
+                let discountText = '';
+                if (promo.discount_type === 'percent') {
+                    discountText = `Giảm ${promo.discount_value}%`;
                 } else {
-                    amount = value + promo.value;
+                    discountText = `Giảm ${promo.discount_value.toLocaleString()} VNĐ`;
                 }
-
-                // Update promo code usage
-                promo.usedCount += 1;
-                localStorage.setItem('shop_promocodes', JSON.stringify(promoCodes));
+                
+                this.showMessage(`Áp dụng mã thành công: ${discountText}`, 'success');
+                return promo;
+            } else {
+                this.showMessage('Mã giảm giá không hợp lệ hoặc đã hết hạn', 'error');
+                return null;
             }
-        }
-
-        return amount;
-    }
-
-    updateUserBalance(amount) {
-        if (!window.authSystem.currentUser) return;
-
-        const users = window.authSystem.users;
-        const userIndex = users.findIndex(u => u.id === window.authSystem.currentUser.id);
-        
-        if (userIndex !== -1) {
-            users[userIndex].balance += amount;
-            window.authSystem.currentUser.balance += amount;
-            
-            window.authSystem.saveUsers(users);
-            localStorage.setItem('current_user', JSON.stringify(window.authSystem.currentUser));
+        } catch (error) {
+            console.error('Promo code error:', error);
+            this.showMessage('Có lỗi khi kiểm tra mã giảm giá', 'error');
+            return null;
         }
     }
 
-    showPaymentModal() {
-        const paymentModal = document.getElementById('paymentModal');
-        if (paymentModal) {
-            paymentModal.classList.add('active');
-        }
-    }
+    // Check promo code validity (simulated)
+    async checkPromoCode(code) {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                // Simulate promo code check
+                const validCodes = {
+                    'WELCOME10': { discount_type: 'percent', discount_value: 10, valid: true },
+                    'SUMMER2023': { discount_type: 'fixed', discount_value: 50000, valid: true }
+                };
 
-    showAccountDetails(product) {
-        // In real implementation, this would show secure account details
-        const details = `
-            Tài khoản: user_${product.id}_${Date.now()}
-            Mật khẩu: pass_${Math.random().toString(36).substr(2, 8)}
-            
-            Lưu ý: 
-            - Vui lòng đổi mật khẩu ngay sau khi nhận tài khoản
-            - Liên hệ hỗ trợ nếu có vấn đề
-        `;
-
-        alert(`THÔNG TIN TÀI KHOẢN:\n\n${details}`);
-    }
-
-    formatCurrency(amount) {
-        return new Intl.NumberFormat('vi-VN', {
-            style: 'currency',
-            currency: 'VND'
-        }).format(amount);
+                const promo = validCodes[code] || { valid: false };
+                resolve(promo);
+            }, 1000);
+        });
     }
 }
 
-// Initialize payment system when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    window.paymentSystem = new PaymentSystem();
+// Initialize payment processor when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    const paymentProcessor = new PaymentProcessor();
+    paymentProcessor.init();
 });
+
+// Export for use in other modules
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = PaymentProcessor;
+}
