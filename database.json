@@ -1,0 +1,80 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "owner",
+      "email": "owner@robloxaccshop.com",
+      "password": "hashed_password",
+      "role": "owner",
+      "balance": 15780000,
+      "registeredAt": "2023-01-01T00:00:00.000Z",
+      "isActive": true
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "name": "Roblox Premium VIP",
+      "description": "Tài khoản Roblox Premium với nhiều item độc quyền",
+      "price": 250000,
+      "originalPrice": 300000,
+      "image": "https://via.placeholder.com/300x200/6c5ce7/ffffff?text=Roblox+VIP",
+      "category": "vip",
+      "stock": 5,
+      "status": "active",
+      "features": [
+        "Hơn 1000 Robux",
+        "10+ Limited Items",
+        "Avatar độc quyền",
+        "Full gamepasses"
+      ],
+      "createdAt": "2023-01-01T00:00:00.000Z"
+    }
+  ],
+  "transactions": [
+    {
+      "id": "T123456789",
+      "type": "topup",
+      "provider": "viettel",
+      "value": 100000,
+      "serial": "123456789012",
+      "pin": "123456789012345",
+      "status": "success",
+      "amount": 100000,
+      "userId": 1,
+      "createdAt": "2023-01-01T10:00:00.000Z"
+    }
+  ],
+  "promoCodes": [
+    {
+      "code": "WELCOME10",
+      "type": "percentage",
+      "value": 10,
+      "maxUsage": 100,
+      "usedCount": 5,
+      "expiryDate": "2024-01-01T00:00:00.000Z",
+      "isActive": true,
+      "createdAt": "2023-01-01T00:00:00.000Z"
+    }
+  ],
+  "withdrawHistory": [
+    {
+      "id": "WD123456789",
+      "amount": 5000000,
+      "method": "bank",
+      "accountInfo": "1234567890",
+      "accountName": "NGUYEN VAN A",
+      "status": "completed",
+      "createdAt": "2023-01-01T15:00:00.000Z",
+      "completedAt": "2023-01-01T16:00:00.000Z"
+    }
+  ],
+  "securityLogs": [
+    {
+      "timestamp": "2023-01-01T12:00:00.000Z",
+      "message": "User owner logged in successfully",
+      "userAgent": "Mozilla/5.0...",
+      "ip": "192.168.1.1"
+    }
+  ]
+}
