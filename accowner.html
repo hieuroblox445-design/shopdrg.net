@@ -3,427 +3,393 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý Owner - RobloxAccShop</title>
-    <link rel="stylesheet" href="admin.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Quản lý Owner - GameAcc Shop</title>
+    <style>
+        :root {
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--dark), #16213e);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-size: 16px;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            width: 100%;
+            font-size: 16px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.4);
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .alert-success {
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+        
+        .alert-danger {
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            text-align: center;
+        }
+        
+        .tab.active {
+            border-bottom: 2px solid var(--secondary);
+            color: var(--secondary);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .user-list {
+            margin-top: 20px;
+        }
+        
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .user-info {
+            flex: 1;
+        }
+        
+        .user-role {
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        
+        .role-owner {
+            background: rgba(106, 17, 203, 0.3);
+            color: #c792ea;
+        }
+        
+        .role-admin {
+            background: rgba(37, 117, 252, 0.3);
+            color: #82aaff;
+        }
+        
+        .role-ctv {
+            background: rgba(255, 193, 7, 0.3);
+            color: #ffcb6b;
+        }
+        
+        .role-investor {
+            background: rgba(40, 167, 69, 0.3);
+            color: #c3e88d;
+        }
+        
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .back-link a {
+            color: var(--secondary);
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
-    <div class="admin-container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <div class="logo">
-                    <i class="fas fa-user-shield"></i>
-                    <span>Owner Panel</span>
+    <div class="container">
+        <div class="logo">GameAcc Shop - Owner</div>
+        
+        <div class="card">
+            <div class="tabs">
+                <div class="tab active" data-tab="login">Đăng nhập</div>
+                <div class="tab" data-tab="users">Quản lý User</div>
+                <div class="tab" data-tab="security">Bảo mật</div>
+            </div>
+            
+            <!-- Login Tab -->
+            <div id="login" class="tab-content active">
+                <div class="alert alert-success" id="loginSuccess">Đăng nhập thành công!</div>
+                <div class="alert alert-danger" id="loginError">Sai tên đăng nhập hoặc mật khẩu!</div>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="username">Tên đăng nhập</label>
+                        <input type="text" class="form-control" id="username" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Mật khẩu</label>
+                        <input type="password" class="form-control" id="password" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Đăng nhập</button>
+                </form>
+                
+                <div class="back-link">
+                    <a href="shop.html">← Quay lại cửa hàng</a>
                 </div>
             </div>
-            <nav class="sidebar-nav">
-                <a href="trangquantri.html" class="nav-item">
-                    <i class="fas fa-arrow-left"></i>
-                    <span>Quay lại</span>
-                </a>
-                <a href="#" class="nav-item active" data-tab="account">
-                    <i class="fas fa-user-cog"></i>
-                    <span>Tài khoản</span>
-                </a>
-                <a href="#" class="nav-item" data-tab="security">
-                    <i class="fas fa-shield-alt"></i>
-                    <span>Bảo mật</span>
-                </a>
-                <a href="#" class="nav-item" data-tab="backup">
-                    <i class="fas fa-database"></i>
-                    <span>Sao lưu</span>
-                </a>
-                <a href="#" class="nav-item" data-tab="logs">
-                    <i class="fas fa-clipboard-list"></i>
-                    <span>Nhật ký</span>
-                </a>
-            </nav>
-        </div>
-
-        <!-- Main Content -->
-        <div class="main-content">
-            <header class="admin-header">
-                <div class="header-left">
-                    <h1 class="page-title" id="pageTitle">Quản lý Owner</h1>
-                </div>
-                <div class="header-right">
-                    <button class="btn-logout" id="logoutBtn">
-                        <i class="fas fa-sign-out-alt"></i>
-                        Đăng xuất
-                    </button>
-                </div>
-            </header>
-
-            <div class="content-area">
-                <!-- Account Tab -->
-                <div class="tab-content active" id="accountTab">
-                    <div class="settings-section">
-                        <div class="settings-card">
-                            <h3 class="settings-title">Thông tin tài khoản Owner</h3>
-                            <form class="settings-form" id="ownerForm">
-                                <div class="form-group">
-                                    <label for="ownerUsername">Tên đăng nhập</label>
-                                    <input type="text" id="ownerUsername" value="owner" readonly>
-                                </div>
-                                <div class="form-group">
-                                    <label for="ownerEmail">Email</label>
-                                    <input type="email" id="ownerEmail" value="owner@robloxaccshop.com" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="currentPassword">Mật khẩu hiện tại</label>
-                                    <input type="password" id="currentPassword" placeholder="Nhập mật khẩu hiện tại">
-                                </div>
-                                <div class="form-group">
-                                    <label for="newPassword">Mật khẩu mới</label>
-                                    <input type="password" id="newPassword" placeholder="Nhập mật khẩu mới">
-                                </div>
-                                <div class="form-group">
-                                    <label for="confirmPassword">Xác nhận mật khẩu</label>
-                                    <input type="password" id="confirmPassword" placeholder="Xác nhận mật khẩu mới">
-                                </div>
-                                <button type="submit" class="btn-primary">Cập nhật thông tin</button>
-                            </form>
+            
+            <!-- Users Tab -->
+            <div id="users" class="tab-content">
+                <h3 style="margin-bottom: 15px;">Quản lý người dùng</h3>
+                
+                <form id="addUserForm">
+                    <div class="form-group">
+                        <label for="newUsername">Tên đăng nhập</label>
+                        <input type="text" class="form-control" id="newUsername" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="newPassword">Mật khẩu</label>
+                        <input type="password" class="form-control" id="newPassword" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="userRole">Vai trò</label>
+                        <select class="form-control" id="userRole" required>
+                            <option value="admin">Admin</option>
+                            <option value="ctv">Cộng tác viên</option>
+                            <option value="investor">Nhà đầu tư</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Thêm người dùng</button>
+                </form>
+                
+                <div class="user-list">
+                    <div class="user-item">
+                        <div class="user-info">
+                            <strong>owner</strong>
+                            <span class="user-role role-owner">Owner</span>
                         </div>
-
-                        <div class="settings-card">
-                            <h3 class="settings-title">Quản lý quyền hệ thống</h3>
-                            <div class="permissions-management">
-                                <div class="permission-item">
-                                    <div class="permission-info">
-                                        <span class="permission-name">Thêm Admin</span>
-                                        <span class="permission-desc">Cấp quyền quản trị viên cho người dùng</span>
-                                    </div>
-                                    <button class="btn-primary btn-sm" onclick="manageAdmins()">
-                                        Quản lý
-                                    </button>
-                                </div>
-                                <div class="permission-item">
-                                    <div class="permission-info">
-                                        <span class="permission-name">Quản lý CTV</span>
-                                        <span class="permission-desc">Thêm/xóa cộng tác viên</span>
-                                    </div>
-                                    <button class="btn-primary btn-sm" onclick="manageCTVs()">
-                                        Quản lý
-                                    </button>
-                                </div>
-                                <div class="permission-item">
-                                    <div class="permission-info">
-                                        <span class="permission-name">Cấu hình hệ thống</span>
-                                        <span class="permission-desc">Thay đổi cài đặt quan trọng</span>
-                                    </div>
-                                    <button class="btn-primary btn-sm" onclick="systemConfig()">
-                                        Cấu hình
-                                    </button>
-                                </div>
-                            </div>
+                        <div>
+                            <button class="btn btn-danger" style="padding: 5px 10px; font-size: 14px;" disabled>Không thể xóa</button>
+                        </div>
+                    </div>
+                    <div class="user-item">
+                        <div class="user-info">
+                            <strong>admin1</strong>
+                            <span class="user-role role-admin">Admin</span>
+                        </div>
+                        <div>
+                            <button class="btn btn-danger" style="padding: 5px 10px; font-size: 14px;">Xóa</button>
+                        </div>
+                    </div>
+                    <div class="user-item">
+                        <div class="user-info">
+                            <strong>ctv1</strong>
+                            <span class="user-role role-ctv">CTV</span>
+                        </div>
+                        <div>
+                            <button class="btn btn-danger" style="padding: 5px 10px; font-size: 14px;">Xóa</button>
                         </div>
                     </div>
                 </div>
-
-                <!-- Security Tab -->
-                <div class="tab-content" id="securityTab">
-                    <div class="settings-section">
-                        <div class="settings-card">
-                            <h3 class="settings-title">Cài đặt bảo mật</h3>
-                            <form class="settings-form">
-                                <div class="form-group">
-                                    <label class="checkbox-label">
-                                        <input type="checkbox" checked>
-                                        <span class="checkmark"></span>
-                                        Yêu cầu xác thực 2 lớp cho Owner
-                                    </label>
-                                </div>
-                                <div class="form-group">
-                                    <label class="checkbox-label">
-                                        <input type="checkbox" checked>
-                                        <span class="checkmark"></span>
-                                        Ghi log các hoạt động quan trọng
-                                    </label>
-                                </div>
-                                <div class="form-group">
-                                    <label class="checkbox-label">
-                                        <input type="checkbox">
-                                        <span class="checkmark"></span>
-                                        Giới hạn đăng nhập theo IP
-                                    </label>
-                                </div>
-                                <div class="form-group">
-                                    <label for="sessionTimeout">Thời gian timeout phiên làm việc (phút)</label>
-                                    <input type="number" id="sessionTimeout" value="30" min="5" max="240">
-                                </div>
-                                <button type="submit" class="btn-primary">Lưu cài đặt</button>
-                            </form>
-                        </div>
-
-                        <div class="settings-card">
-                            <h3 class="settings-title">Phiên đăng nhập hiện tại</h3>
-                            <div class="session-info">
-                                <div class="session-item">
-                                    <span class="session-label">Thời gian bắt đầu:</span>
-                                    <span class="session-value" id="sessionStart">--</span>
-                                </div>
-                                <div class="session-item">
-                                    <span class="session-label">Địa chỉ IP:</span>
-                                    <span class="session-value" id="sessionIP">--</span>
-                                </div>
-                                <div class="session-item">
-                                    <span class="session-label">Trình duyệt:</span>
-                                    <span class="session-value" id="sessionBrowser">--</span>
-                                </div>
-                                <div class="session-actions">
-                                    <button class="btn-secondary" onclick="refreshSession()">
-                                        <i class="fas fa-sync"></i> Làm mới
-                                    </button>
-                                    <button class="btn-primary" onclick="terminateOtherSessions()">
-                                        <i class="fas fa-times"></i> Kết thúc phiên khác
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+            </div>
+            
+            <!-- Security Tab -->
+            <div id="security" class="tab-content">
+                <h3 style="margin-bottom: 15px;">Cài đặt bảo mật</h3>
+                
+                <div class="alert alert-success" id="securitySuccess">Cập nhật thành công!</div>
+                
+                <form id="securityForm">
+                    <div class="form-group">
+                        <label for="currentPassword">Mật khẩu hiện tại</label>
+                        <input type="password" class="form-control" id="currentPassword" required>
                     </div>
-                </div>
-
-                <!-- Backup Tab -->
-                <div class="tab-content" id="backupTab">
-                    <div class="settings-section">
-                        <div class="settings-card">
-                            <h3 class="settings-title">Sao lưu dữ liệu</h3>
-                            <div class="backup-actions">
-                                <button class="btn-primary" onclick="createBackup()">
-                                    <i class="fas fa-download"></i>
-                                    Tạo bản sao lưu
-                                </button>
-                                <button class="btn-secondary" onclick="restoreBackup()">
-                                    <i class="fas fa-upload"></i>
-                                    Khôi phục dữ liệu
-                                </button>
-                            </div>
-                            <div class="backup-info">
-                                <h4>Lần sao lưu gần nhất:</h4>
-                                <p id="lastBackup">Chưa có bản sao lưu nào</p>
-                            </div>
-                        </div>
-
-                        <div class="settings-card">
-                            <h3 class="settings-title">Tự động sao lưu</h3>
-                            <form class="settings-form">
-                                <div class="form-group">
-                                    <label class="checkbox-label">
-                                        <input type="checkbox" checked>
-                                        <span class="checkmark"></span>
-                                        Bật tự động sao lưu
-                                    </label>
-                                </div>
-                                <div class="form-group">
-                                    <label for="backupFrequency">Tần suất sao lưu</label>
-                                    <select id="backupFrequency">
-                                        <option value="daily">Hàng ngày</option>
-                                        <option value="weekly" selected>Hàng tuần</option>
-                                        <option value="monthly">Hàng tháng</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="backupTime">Thời gian sao lưu</label>
-                                    <input type="time" id="backupTime" value="02:00">
-                                </div>
-                                <button type="submit" class="btn-primary">Lưu cài đặt</button>
-                            </form>
-                        </div>
+                    
+                    <div class="form-group">
+                        <label for="newSecurityPassword">Mật khẩu mới</label>
+                        <input type="password" class="form-control" id="newSecurityPassword" required>
                     </div>
-                </div>
-
-                <!-- Logs Tab -->
-                <div class="tab-content" id="logsTab">
-                    <div class="tab-header">
-                        <h2 class="tab-title">Nhật ký hệ thống</h2>
-                        <div class="filter-options">
-                            <select id="logTypeFilter">
-                                <option value="all">Tất cả</option>
-                                <option value="security">Bảo mật</option>
-                                <option value="transaction">Giao dịch</option>
-                                <option value="system">Hệ thống</option>
-                            </select>
-                            <button class="btn-secondary" onclick="clearLogs()">
-                                <i class="fas fa-trash"></i>
-                                Xóa nhật ký
-                            </button>
-                        </div>
+                    
+                    <div class="form-group">
+                        <label for="confirmPassword">Xác nhận mật khẩu mới</label>
+                        <input type="password" class="form-control" id="confirmPassword" required>
                     </div>
-                    <div class="table-container">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Thời gian</th>
-                                    <th>Loại</th>
-                                    <th>Nội dung</th>
-                                    <th>Người dùng</th>
-                                    <th>IP</th>
-                                </tr>
-                            </thead>
-                            <tbody id="logsTableBody">
-                                <!-- Logs will be loaded here -->
-                            </tbody>
-                        </table>
+                    
+                    <div class="form-group">
+                        <label for="withdrawCode">Mã rút tiền (chỉ Owner)</label>
+                        <input type="password" class="form-control" id="withdrawCode" placeholder="Nhập mã mới (nếu muốn thay đổi)">
                     </div>
-                </div>
+                    
+                    <button type="submit" class="btn btn-primary">Cập nhật bảo mật</button>
+                </form>
             </div>
         </div>
     </div>
 
-    <script src="auth.js"></script>
-    <script src="security.js"></script>
     <script>
-        // Owner-specific functionality
-        function manageAdmins() {
-            alert('Tính năng quản lý Admin đang được phát triển!');
-        }
+        // Tab functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                
+                // Deactivate all tabs and contents
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Activate current tab and content
+                this.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
 
-        function manageCTVs() {
-            alert('Tính năng quản lý CTV đang được phát triển!');
-        }
-
-        function systemConfig() {
-            alert('Tính năng cấu hình hệ thống đang được phát triển!');
-        }
-
-        function createBackup() {
-            // Create backup of all data
-            const backup = {
-                timestamp: new Date().toISOString(),
-                users: localStorage.getItem('shop_users'),
-                products: localStorage.getItem('shop_products'),
-                transactions: localStorage.getItem('shop_transactions'),
-                promoCodes: localStorage.getItem('shop_promocodes')
-            };
-
-            // Download as JSON file
-            const dataStr = JSON.stringify(backup, null, 2);
-            const dataBlob = new Blob([dataStr], {type: 'application/json'});
-            const url = URL.createObjectURL(dataBlob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `backup-${new Date().toISOString().split('T')[0]}.json`;
-            link.click();
-            URL.revokeObjectURL(url);
-
-            window.authSystem.showMessage('Đã tạo bản sao lưu thành công!', 'success');
-        }
-
-        function restoreBackup() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.json';
-            input.onchange = function(e) {
-                const file = e.target.files[0];
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    try {
-                        const backup = JSON.parse(e.target.result);
-                        
-                        if (confirm('Bạn có chắc chắn muốn khôi phục dữ liệu? Hành động này không thể hoàn tác!')) {
-                            if (backup.users) localStorage.setItem('shop_users', backup.users);
-                            if (backup.products) localStorage.setItem('shop_products', backup.products);
-                            if (backup.transactions) localStorage.setItem('shop_transactions', backup.transactions);
-                            if (backup.promoCodes) localStorage.setItem('shop_promocodes', backup.promoCodes);
-                            
-                            window.authSystem.showMessage('Khôi phục dữ liệu thành công!', 'success');
-                            setTimeout(() => location.reload(), 1000);
-                        }
-                    } catch (error) {
-                        window.authSystem.showMessage('File sao lưu không hợp lệ!', 'error');
-                    }
-                };
-                reader.readAsText(file);
-            };
-            input.click();
-        }
-
-        function refreshSession() {
-            window.authSystem.showMessage('Đã làm mới thông tin phiên!', 'success');
-        }
-
-        function terminateOtherSessions() {
-            if (confirm('Bạn có chắc chắn muốn kết thúc tất cả các phiên đăng nhập khác?')) {
-                window.authSystem.showMessage('Đã kết thúc các phiên đăng nhập khác!', 'success');
-            }
-        }
-
-        function clearLogs() {
-            if (confirm('Bạn có chắc chắn muốn xóa tất cả nhật ký?')) {
-                localStorage.removeItem('security_logs');
-                localStorage.removeItem('page_views');
-                window.authSystem.showMessage('Đã xóa nhật ký!', 'success');
-                loadLogs();
-            }
-        }
-
-        function loadLogs() {
-            const tbody = document.getElementById('logsTableBody');
-            if (!tbody) return;
-
-            const securityLogs = JSON.parse(localStorage.getItem('security_logs') || '[]');
-            const pageViews = JSON.parse(localStorage.getItem('page_views') || '[]');
+        // Login form
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
             
-            const allLogs = [
-                ...securityLogs.map(log => ({...log, type: 'security', user: 'System'})),
-                ...pageViews.map(view => ({...view, type: 'system', user: 'Unknown', message: `Truy cập trang: ${view.page}`}))
-            ].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-
-            tbody.innerHTML = allLogs.map(log => `
-                <tr>
-                    <td>${new Date(log.timestamp).toLocaleString('vi-VN')}</td>
-                    <td>
-                        <span class="log-type ${log.type}">${log.type}</span>
-                    </td>
-                    <td>${log.message}</td>
-                    <td>${log.user}</td>
-                    <td>${log.ip || 'N/A'}</td>
-                </tr>
-            `).join('');
-        }
-
-        // Initialize owner page
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check if user is owner
-            if (!window.authSystem || !window.authSystem.hasOwnerAccess()) {
-                window.authSystem.showMessage('Chỉ Owner mới có quyền truy cập trang này!', 'error');
+            // In a real implementation, this would check against stored credentials
+            // For demo purposes, we'll use a simple check
+            if (username === 'owner' && password === 'owner123') {
+                document.getElementById('loginSuccess').style.display = 'block';
+                document.getElementById('loginError').style.display = 'none';
+                
+                // Redirect to admin page after successful login
                 setTimeout(() => {
                     window.location.href = 'trangquantri.html';
-                }, 2000);
-                return;
+                }, 1000);
+            } else {
+                document.getElementById('loginSuccess').style.display = 'none';
+                document.getElementById('loginError').style.display = 'block';
             }
+        });
 
-            // Load logs
-            loadLogs();
+        // Add user form
+        document.getElementById('addUserForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Người dùng đã được thêm thành công!');
+            this.reset();
+        });
 
-            // Setup tab switching
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.addEventListener('click', (e) => {
-                    if (item.getAttribute('href')) return; // Skip links with href
-                    
-                    e.preventDefault();
-                    const tabName = item.getAttribute('data-tab');
-                    
-                    // Update navigation
-                    document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-                    item.classList.add('active');
-                    
-                    // Update content
-                    document.querySelectorAll('.tab-content').forEach(content => {
-                        content.classList.remove('active');
-                    });
-                    document.getElementById(`${tabName}Tab`).classList.add('active');
-                    
-                    // Update page title
-                    document.getElementById('pageTitle').textContent = item.querySelector('span').textContent;
-                });
+        // Security form
+        document.getElementById('securityForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.getElementById('securitySuccess').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('securitySuccess').style.display = 'none';
+            }, 3000);
+            this.reset();
+        });
+
+        // Delete user buttons
+        document.querySelectorAll('.user-list .btn-danger').forEach(button => {
+            button.addEventListener('click', function() {
+                if (!this.disabled) {
+                    if (confirm('Bạn có chắc chắn muốn xóa người dùng này?')) {
+                        this.closest('.user-item').remove();
+                    }
+                }
             });
-
-            // Update session info
-            document.getElementById('sessionStart').textContent = new Date().toLocaleString('vi-VN');
-            document.getElementById('sessionBrowser').textContent = navigator.userAgent.split(' ')[0];
         });
     </script>
 </body>
